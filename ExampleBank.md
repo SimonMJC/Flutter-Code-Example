@@ -2,7 +2,7 @@
 
 ## 1
 
-```
+```dart
 import 'dart:async';
 
 Future<String> fetchUserData(String userId) async {
@@ -32,7 +32,7 @@ void main() async {
 ```
 
 ## 2 
-```
+```dart
 class BankAccount {
   String accountHolder;
   double balance;
@@ -69,7 +69,7 @@ void main() {
 ```
 
 ## 3
-```
+```dart
 import 'dart:collection';
 
 class Product {
@@ -145,7 +145,7 @@ void main() {
 ```
 
 ## 4
-```
+```dart
 import 'dart:io';
 
 class Book {
@@ -253,7 +253,7 @@ void main() {
 ```
 
 ## 5
-```
+```dart
 import 'dart:io';
 
 class BankAccount {
@@ -393,7 +393,7 @@ void main() {
 ```
 
 ## 6 
-```
+```dart
 import 'dart:io';
 
 class Question {
@@ -466,7 +466,7 @@ void main() {
 
 ## 7
 - 해당코드는 실행해보면서 해석해도 좋을 듯
-```
+```dart
 import 'dart:io';
 
 class MenuItem {
@@ -562,7 +562,7 @@ void main() {
 # Collection Example
 
 ## 8
-```
+```dart
 class Student {
   String name;
   List<int> scores;
@@ -621,7 +621,7 @@ void main() {
 ```
 
 ## 10
-```
+```dart
 class Item {
   String name;
   double price;
@@ -652,7 +652,7 @@ void main() {
 ```
 
 ## 11
-```
+```dart
 class Song {
   String title;
   String artist;
@@ -720,7 +720,7 @@ void main() {
 
 
 ## 12
-```
+```dart
 class Student {
   String name;
   int grade;
@@ -791,7 +791,7 @@ void main() {
 
 
 ## 13
-```
+```dart
 class Book {
   String title;
   String author;
@@ -878,7 +878,7 @@ void main() {
 # 난이도 중
 
 ## 14
-```
+```dart
 class WeatherCondition {
   String description;
   double temperature;
@@ -948,7 +948,7 @@ void main() {
 ```
 
 ## 15
-```
+```dart
 class Ingredient {
   String name;
   double amount;
@@ -1042,6 +1042,6 @@ void main() {
 ```
 
 ## 16
-```
+```dart
 
 ```
