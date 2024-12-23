@@ -210,3 +210,164 @@ void main() {
     ```
     - 여기서 forEach(print)를 사용할 때, 각 Book 객체가 print() 함수에 전달되면서 암시적으로 toString() 메서드가 호출됩니다.
     - 따라서, 직접적인 toString() 호출은 없지만, 이 메서드는 객체를 출력하거나 문자열로 표현해야 할 때 자동으로 사용됩니다.
+
+# Dessert
+```dart
+import 'dart:io';
+
+class Question {
+  String question;
+  List<String> options;
+  int correctAnswer;
+
+  Question(this.question, this.options, this.correctAnswer);
+
+  bool checkAnswer(int userAnswer) {
+    return userAnswer == correctAnswer;
+  }
+}
+
+class Quiz {
+  List<Question> questions = [];
+  int score = 0;
+
+  void addQuestion(Question question) {
+    questions.add(question);
+  }
+
+  void startQuiz() {
+    for (var i = 0; i < questions.length; i++) {
+      print("\n질문 ${i + 1}: ${questions[i].question}");
+      for (var j = 0; j < questions[i].options.length; j++) {
+        print("${j + 1}. ${questions[i].options[j]}");
+      }
+
+      stdout.write("답변 선택 (1-${questions[i].options.length}): ");
+      var userAnswer = int.tryParse(stdin.readLineSync() ?? "") ?? 0;
+
+      if (questions[i].checkAnswer(userAnswer)) {
+        print("정답입니다!");
+        score++;
+      } else {
+        print("틀렸습니다. 정답은 ${questions[i].correctAnswer}번입니다.");
+      }
+    }
+
+    print("\n퀴즈 종료! 당신의 점수: $score / ${questions.length}");
+  }
+}
+
+void main() {
+  var quiz = Quiz();
+
+  quiz.addQuestion(Question(
+    "다트(Dart)의 개발사는?",
+    ["Apple", "Google", "Microsoft", "Facebook"],
+    2
+  ));
+
+  quiz.addQuestion(Question(
+    "다트의 주요 용도는?",
+    ["웹 개발", "모바일 앱 개발", "데스크톱 앱 개발", "모두"],
+    4
+  ));
+
+  quiz.addQuestion(Question(
+    "다트에서 'final'과 'const'의 차이점은?",
+    ["차이 없음", "final은 런타임에, const는 컴파일 타임에 값이 결정됨", "const는 런타임에, final은 컴파일 타임에 값이 결정됨", "final은 변경 가능, const는 변경 불가능"],
+    2
+  ));
+
+  print("간단한 퀴즈 게임을 시작합니다!");
+  quiz.startQuiz();
+}
+```
+
+# Dart 퀴즈 게임 코드 해석
+
+이 코드는 간단한 퀴즈 게임을 구현한 Dart 프로그램입니다. 주요 구성 요소와 문법을 설명하겠습니다.
+
+## 1. import 문
+
+```dart
+import 'dart:io';
+```
+
+- `dart:io` 라이브러리를 가져옵니다.
+- 이 라이브러리는 입출력 관련 기능을 제공합니다.
+
+## 2. Question 클래스
+
+```dart
+class Question {
+  String question;
+  List<String> options;
+  int correctAnswer;
+
+  Question(this.question, this.options, this.correctAnswer);
+
+  bool checkAnswer(int userAnswer) {
+    return userAnswer == correctAnswer;
+  }
+}
+```
+
+- **생성자**: `Question(this.question, this.options, this.correctAnswer);`
+  - 간단한 생성자 문법을 사용하여 모든 필드를 초기화합니다.
+- **checkAnswer 메서드**: 사용자의 답변이 정답인지 확인합니다.
+
+## 3. Quiz 클래스
+
+```dart
+class Quiz {
+  List<Question> questions = [];
+  int score = 0;
+
+  void addQuestion(Question question) {
+    questions.add(question);
+  }
+
+  void startQuiz() {
+    // 퀴즈 실행 로직
+  }
+}
+```
+
+- `List<Question> questions = [];`: Question 객체들의 리스트를 초기화합니다.
+- `addQuestion` 메서드: 새로운 질문을 퀴즈에 추가합니다.
+- `startQuiz` 메서드: 퀴즈를 실행하는 주요 로직을 포함합니다.
+
+### startQuiz 메서드 상세 설명
+
+```dart
+void startQuiz() {
+  for (var i = 0; i < questions.length; i++) {
+    // 질문과 선택지 출력
+    // 사용자 입력 받기
+    // 답변 확인 및 점수 계산
+  }
+  // 최종 점수 출력
+}
+```
+
+- 각 질문에 대해 반복문을 실행합니다.
+- `stdout.write`와 `stdin.readLineSync()`를 사용하여 사용자 입력을 받습니다.
+- `int.tryParse`와 null-aware 연산자 `??`를 사용하여 입력값을 안전하게 처리합니다.
+
+## 4. main 함수
+
+```dart
+void main() {
+  var quiz = Quiz();
+
+  // 퀴즈에 질문 추가
+  quiz.addQuestion(Question(/* ... */));
+  // ...
+
+  print("간단한 퀴즈 게임을 시작합니다!");
+  quiz.startQuiz();
+}
+```
+
+- Quiz 객체를 생성하고 질문들을 추가합니다.
+- `startQuiz` 메서드를 호출하여 퀴즈를 시작합니다.
