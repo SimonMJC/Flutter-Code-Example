@@ -1041,7 +1041,473 @@ void main() {
 }
 ```
 
-## 16
-```dart
+# 비동기
 
+네, 이전에 제공한 전체 코드, 주요 기능, 상세한 설명에 비동기 관련 문법 설명을 덧붙여 마크다운 형식으로 정리해드리겠습니다.
+
+## 1. 비동기적으로 숫자 리스트 처리하기
+
+### 전체 코드
+```dart
+import 'dart:async';
+
+Future<int> processNumber(int num) async {
+  await Future.delayed(Duration(seconds: 1));
+  return num * 2;
+}
+
+void main() async {
+  final numbers = [1, 2, 3, 4, 5];
+  
+  print('Processing numbers...');
+  final results = await Future.wait(numbers.map(processNumber));
+  
+  print('Original numbers: $numbers');
+  print('Processed numbers: $results');
+  
+  final sum = results.reduce((a, b) => a + b);
+  print('Sum of processed numbers: $sum');
+}
 ```
+
+### 주요 기능
+
+1. 비동기 함수 정의:
+   ```dart
+   Future<int> processNumber(int num) async {
+     await Future.delayed(Duration(seconds: 1));
+     return num * 2;
+   }
+   ```
+
+2. 리스트 매핑과 비동기 처리:
+   ```dart
+   final results = await Future.wait(numbers.map(processNumber));
+   ```
+
+3. 리스트 축소:
+   ```dart
+   final sum = results.reduce((a, b) => a + b);
+   ```
+
+### 상세 설명
+
+1. `processNumber` 함수는 입력 숫자를 1초 지연 후 2배로 만듭니다:
+   ```dart
+   Future<int> processNumber(int num) async {
+     await Future.delayed(Duration(seconds: 1));
+     return num * 2;
+   }
+   ```
+
+2. `main` 함수에서 숫자 리스트를 정의하고 처리합니다:
+   ```dart
+   final numbers = [1, 2, 3, 4, 5];
+   final results = await Future.wait(numbers.map(processNumber));
+   ```
+
+3. 처리된 결과의 합을 계산합니다:
+   ```dart
+   final sum = results.reduce((a, b) => a + b);
+   ```
+
+### 비동기 관련 문법 설명
+
+1. `async` 키워드:
+   ```dart
+   Future<int> processNumber(int num) async {
+     // ...
+   }
+   ```
+   - `async` 키워드는 함수가 비동기적으로 동작함을 나타냅니다.
+   - 이 함수는 `Future<int>`를 반환합니다.
+
+2. `await` 키워드:
+   ```dart
+   await Future.delayed(Duration(seconds: 1));
+   ```
+   - `await`는 `Future`가 완료될 때까지 실행을 일시 중지합니다.
+   - 여기서는 1초간 지연을 기다립니다.
+
+3. `Future.wait`:
+   ```dart
+   final results = await Future.wait(numbers.map(processNumber));
+   ```
+   - `Future.wait`는 여러 `Future`를 동시에 실행하고 모든 결과를 기다립니다.
+   - `numbers.map(processNumber)`는 각 숫자에 대해 `processNumber` 함수를 호출하여 `Future<int>` 리스트를 생성합니다.
+   - `await`를 사용하여 모든 `Future`가 완료될 때까지 기다립니다.
+
+## 2. 비동기 필터링 및 매핑
+
+### 전체 코드
+```dart
+Future<String> fetchUserName(int id) async {
+  await Future.delayed(Duration(milliseconds: 500));
+  return 'User$id';
+}
+
+void main() async {
+  final userIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  
+  final evenUserIds = userIds.where((id) => id.isEven);
+  
+  print('Fetching user names for even IDs...');
+  final userNames = await Future.wait(evenUserIds.map(fetchUserName));
+  
+  print('Even user IDs: $evenUserIds');
+  print('Fetched user names: $userNames');
+  
+  final userMap = Map.fromIterables(evenUserIds, userNames);
+  userMap.forEach((id, name) => print('ID: $id, Name: $name'));
+}
+```
+
+### 주요 기능
+
+1. 리스트 필터링:
+   ```dart
+   final evenUserIds = userIds.where((id) => id.isEven);
+   ```
+
+2. 비동기 매핑:
+   ```dart
+   final userNames = await Future.wait(evenUserIds.map(fetchUserName));
+   ```
+
+3. 맵 생성:
+   ```dart
+   final userMap = Map.fromIterables(evenUserIds, userNames);
+   ```
+
+### 상세 설명
+
+1. 짝수 ID만 필터링합니다:
+   ```dart
+   final evenUserIds = userIds.where((id) => id.isEven);
+   ```
+
+2. 필터링된 ID에 대해 사용자 이름을 비동기적으로 가져옵니다:
+   ```dart
+   final userNames = await Future.wait(evenUserIds.map(fetchUserName));
+   ```
+
+3. ID와 이름으로 맵을 생성하고 출력합니다:
+   ```dart
+   final userMap = Map.fromIterables(evenUserIds, userNames);
+   userMap.forEach((id, name) => print('ID: $id, Name: $name'));
+   ```
+
+### 비동기 관련 문법 설명
+
+1. `async` 함수:
+   ```dart
+   Future<String> fetchUserName(int id) async {
+     // ...
+   }
+   ```
+   - 이 함수는 `Future<String>`을 반환하는 비동기 함수입니다.
+
+2. `Future.delayed`:
+   ```dart
+   await Future.delayed(Duration(milliseconds: 500));
+   ```
+   - 네트워크 요청을 시뮬레이션하기 위해 500밀리초 지연을 생성합니다.
+
+3. `Future.wait`와 `map`:
+   ```dart
+   final userNames = await Future.wait(evenUserIds.map(fetchUserName));
+   ```
+   - `evenUserIds.map(fetchUserName)`은 각 ID에 대해 `fetchUserName`을 호출하여 `Future<String>` 리스트를 생성합니다.
+   - `Future.wait`는 모든 `Future`가 완료될 때까지 기다린 후, 결과를 리스트로 반환합니다.
+
+## 3. 비동기 리스트 변환 및 필터링
+
+### 전체 코드
+```dart
+Future<Map<String, int>> fetchWordCount(String word) async {
+  await Future.delayed(Duration(milliseconds: 300));
+  return {word: word.length};
+}
+
+void main() async {
+  final words = ['apple', 'banana', 'cherry', 'date', 'elderberry'];
+  
+  print('Fetching word counts...');
+  final wordCounts = await Future.wait(words.map(fetchWordCount));
+  
+  final flattenedCounts = Map.fromEntries(wordCounts.expand((map) => map.entries));
+  print('Word counts: $flattenedCounts');
+  
+  final longWords = flattenedCounts.entries
+      .where((entry) => entry.value > 5)
+      .map((entry) => entry.key)
+      .toList();
+  
+  print('Words with more than 5 characters: $longWords');
+}
+```
+
+### 주요 기능
+
+1. 비동기 매핑:
+   ```dart
+   final wordCounts = await Future.wait(words.map(fetchWordCount));
+   ```
+
+2. 맵 평탄화:
+   ```dart
+   final flattenedCounts = Map.fromEntries(wordCounts.expand((map) => map.entries));
+   ```
+
+3. 필터링 및 변환:
+   ```dart
+   final longWords = flattenedCounts.entries
+       .where((entry) => entry.value > 5)
+       .map((entry) => entry.key)
+       .toList();
+   ```
+
+### 상세 설명
+
+1. 각 단어의 길이를 비동기적으로 가져옵니다:
+   ```dart
+   final wordCounts = await Future.wait(words.map(fetchWordCount));
+   ```
+
+2. 결과를 하나의 맵으로 평탄화합니다:
+   ```dart
+   final flattenedCounts = Map.fromEntries(wordCounts.expand((map) => map.entries));
+   ```
+
+3. 5글자 초과 단어만 필터링하여 새 리스트를 만듭니다:
+   ```dart
+   final longWords = flattenedCounts.entries
+       .where((entry) => entry.value > 5)
+       .map((entry) => entry.key)
+       .toList();
+   ```
+
+### 비동기 관련 문법 설명
+
+1. 비동기 함수 정의:
+   ```dart
+   Future<Map<String, int>> fetchWordCount(String word) async {
+     // ...
+   }
+   ```
+   - 이 함수는 `Future<Map<String, int>>`를 반환합니다.
+
+2. `Future.wait`와 `map` 조합:
+   ```dart
+   final wordCounts = await Future.wait(words.map(fetchWordCount));
+   ```
+   - `words.map(fetchWordCount)`는 각 단어에 대해 `fetchWordCount`를 호출하여 `Future<Map<String, int>>` 리스트를 생성합니다.
+   - `Future.wait`는 모든 비동기 작업이 완료될 때까지 기다립니다.
+
+3. 비동기 결과 처리:
+   ```dart
+   final flattenedCounts = Map.fromEntries(wordCounts.expand((map) => map.entries));
+   ```
+   - 비동기 작업의 결과를 동기적으로 처리합니다.
+   - `expand`를 사용하여 중첩된 맵 엔트리를 평탄화합니다.
+
+## 4. 비동기 리스트 정렬
+
+### 전체 코드
+```dart
+Future<double> fetchPrice(String item) async {
+  await Future.delayed(Duration(milliseconds: 200));
+  return {'apple': 0.5, 'banana': 0.3, 'cherry': 0.8}[item] ?? 0.0;
+}
+
+void main() async {
+  final fruits = ['banana', 'cherry', 'apple', 'date', 'elderberry'];
+  
+  print('Fetching fruit prices...');
+  final prices = await Future.wait(fruits.map(fetchPrice));
+  
+  final fruitPrices = List.generate(fruits.length, (index) => 
+      {'fruit': fruits[index], 'price': prices[index]});
+  
+  fruitPrices.sort((a, b) => a['price']!.compareTo(b['price']!));
+  
+  print('Fruits sorted by price:');
+  fruitPrices.forEach((item) => 
+      print('${item['fruit']}: \$${item['price']!.toStringAsFixed(2)}'));
+}
+```
+
+### 주요 기능
+
+1. 비동기 데이터 가져오기:
+   ```dart
+   final prices = await Future.wait(fruits.map(fetchPrice));
+   ```
+
+2. 리스트 생성:
+   ```dart
+   final fruitPrices = List.generate(fruits.length, (index) => 
+       {'fruit': fruits[index], 'price': prices[index]});
+   ```
+
+3. 리스트 정렬:
+   ```dart
+   fruitPrices.sort((a, b) => a['price']!.compareTo(b['price']!));
+   ```
+
+### 상세 설명
+
+1. 과일 가격을 비동기적으로 가져옵니다:
+   ```dart
+   final prices = await Future.wait(fruits.map(fetchPrice));
+   ```
+
+2. 과일과 가격을 포함하는 맵 리스트를 생성합니다:
+   ```dart
+   final fruitPrices = List.generate(fruits.length, (index) => 
+       {'fruit': fruits[index], 'price': prices[index]});
+   ```
+
+3. 가격을 기준으로 리스트를 정렬하고 출력합니다:
+   ```dart
+   fruitPrices.sort((a, b) => a['price']!.compareTo(b['price']!));
+   fruitPrices.forEach((item) => 
+       print('${item['fruit']}: \$${item['price']!.toStringAsFixed(2)}'));
+   ```
+
+### 비동기 관련 문법 설명
+
+1. 비동기 함수 정의:
+   ```dart
+   Future<double> fetchPrice(String item) async {
+     // ...
+   }
+   ```
+   - 이 함수는 `Future<double>`을 반환합니다.
+
+2. `Future.wait`를 사용한 병렬 처리:
+   ```dart
+   final prices = await Future.wait(fruits.map(fetchPrice));
+   ```
+   - 모든 과일 가격을 동시에 비동기적으로 가져옵니다.
+   - `fruits.map(fetchPrice)`는 각 과일에 대해 `fetchPrice`를 호출하여 `Future<double>` 리스트를 생성합니다.
+
+3. 비동기 결과 처리:
+   ```dart
+   final fruitPrices = List.generate(fruits.length, (index) => 
+       {'fruit': fruits[index], 'price': prices[index]});
+   ```
+   - 비동기적으로 가져온 가격 정보를 동기적으로 처리하여 새로운 리스트를 생성합니다.
+
+
+## 5. 비동기 리스트 그룹화
+
+### 전체 코드
+```dart
+Future<String> fetchCategory(String item) async {
+  await Future.delayed(Duration(milliseconds: 150));
+  final categories = {
+    'apple': 'fruit', 'carrot': 'vegetable', 'chicken': 'meat',
+    'broccoli': 'vegetable', 'banana': 'fruit', 'beef': 'meat'
+  };
+  return categories[item] ?? 'unknown';
+}
+
+void main() async {
+  final items = ['apple', 'carrot', 'chicken', 'broccoli', 'banana', 'beef'];
+  
+  print('Fetching item categories...');
+  final categories = await Future.wait(items.map(fetchCategory));
+  
+  final groupedItems = <String, List<String>>{};
+  for (var i = 0; i < items.length; i++) {
+    groupedItems.putIfAbsent(categories[i], () => []).add(items[i]);
+  }
+  
+  print('Grouped items by category:');
+  groupedItems.forEach((category, items) {
+    print('$category: ${items.join(', ')}');
+  });
+}
+```
+
+### 주요 기능
+
+1. 비동기 데이터 가져오기:
+   ```dart
+   final categories = await Future.wait(items.map(fetchCategory));
+   ```
+
+2. 맵을 사용한 그룹화:
+   ```dart
+   final groupedItems = <String, List<String>>{};
+   for (var i = 0; i < items.length; i++) {
+     groupedItems.putIfAbsent(categories[i], () => []).add(items[i]);
+   }
+   ```
+
+3. 그룹화된 결과 출력:
+   ```dart
+   groupedItems.forEach((category, items) {
+     print('$category: ${items.join(', ')}');
+   });
+   ```
+
+### 상세 설명
+
+1. 각 아이템의 카테고리를 비동기적으로 가져옵니다:
+   ```dart
+   final categories = await Future.wait(items.map(fetchCategory));
+   ```
+
+2. 카테고리별로 아이템을 그룹화합니다:
+   ```dart
+   final groupedItems = <String, List<String>>{};
+   for (var i = 0; i < items.length; i++) {
+     groupedItems.putIfAbsent(categories[i], () => []).add(items[i]);
+   }
+   ```
+
+3. 그룹화된 결과를 출력합니다:
+   ```dart
+   groupedItems.forEach((category, items) {
+     print('$category: ${items.join(', ')}');
+   });
+   ```
+
+### 비동기 관련 문법 설명
+
+1. 비동기 함수 정의:
+   ```dart
+   Future<String> fetchCategory(String item) async {
+     // ...
+   }
+   ```
+   - 이 함수는 `Future<String>`을 반환합니다.
+   - `async` 키워드는 이 함수가 비동기적으로 동작함을 나타냅니다.
+
+2. `Future.delayed`:
+   ```dart
+   await Future.delayed(Duration(milliseconds: 150));
+   ```
+   - 네트워크 요청을 시뮬레이션하기 위해 150밀리초 지연을 생성합니다.
+   - `await`는 이 지연이 완료될 때까지 함수의 실행을 일시 중지합니다.
+
+3. `Future.wait`를 사용한 병렬 처리:
+   ```dart
+   final categories = await Future.wait(items.map(fetchCategory));
+   ```
+   - `items.map(fetchCategory)`는 각 아이템에 대해 `fetchCategory`를 호출하여 `Future<String>` 리스트를 생성합니다.
+   - `Future.wait`는 모든 `Future`가 완료될 때까지 기다린 후, 결과를 리스트로 반환합니다.
+   - `await`를 사용하여 모든 카테고리 정보가 준비될 때까지 기다립니다.
+
+4. 비동기 결과 처리:
+   ```dart
+   for (var i = 0; i < items.length; i++) {
+     groupedItems.putIfAbsent(categories[i], () => []).add(items[i]);
+   }
+   ```
+   - 비동기적으로 가져온 카테고리 정보를 사용하여 동기적으로 아이템을 그룹화합니다.
+   - `putIfAbsent`를 사용하여 새 카테고리를 만들거나 기존 카테고리에 아이템을 추가합니다.
+
+이 예제는 비동기 작업의 결과를 효율적으로 처리하고 구조화하는 방법을 보여줍니다. `Future.wait`를 사용하여 여러 비동기 작업을 병렬로 처리하고, 그 결과를 동기적으로 정리하여 의미 있는 데이터 구조를 만듭니다.
